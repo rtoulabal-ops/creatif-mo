@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Test</title></head>
+<body>
+<h1>Test du script</h1>
+<div id="apiDiag" style="background:#000;color:#0f0;padding:10px;">Initialisation...</div>
+<script>
+  try {
+    document.getElementById('apiDiag').textContent = '✅ Le script fonctionne parfaitement !';
+  } catch(e) {
+    document.getElementById('apiDiag').textContent = '❌ Erreur : ' + e.message;
+  }
+</script>
+</body>
+</html>
