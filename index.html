@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Créatif</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+background:#fafafa;color:#1a1a1a;min-height:100vh;padding:1rem;font-size:15px;
+line-height:1.5;max-width:900px;margin:0 auto;padding-bottom:3rem}
+h1{font-size:1.3rem;text-align:center;margin-bottom:.2rem}
+.sub{text-align:center;color:#777;font-size:.75rem;font-style:italic;margin-bottom:1rem}
+.box{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1rem;margin-bottom:.8rem}
+.box.ok{border-color:#2d8a4e}
+.lbl{display:block;font-size:.68rem;color:#777;margin-bottom:.4rem;text-transform:uppercase;font-weight:600}
+input[type=password],input[type=text],textarea,select{width:100%;padding:.7rem;border:1px solid #e5e5e5;
+background:#fafafa;color:#1a1a1a;border-radius:8px;font-family:inherit;font-size:.88rem;margin-bottom:.4rem;outline:none}
+textarea{min-height:70px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:#7c3aed;background:#fff}
+button{background:#1a1a1a;color:#fff;border:1px solid transparent;padding:.75rem;border-radius:8px;
+width:100%;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:.5rem}
+button:hover:not(:disabled){opacity:.88}
+button.purple{background:#7c3aed;border-color:#7c3aed}
+button:disabled{opacity:.35;cursor:not-allowed}
+.row{display:flex;gap:.5rem;flex-wrap:wrap}
+.row>*{flex:1;min-width:0}
+.row button{margin-bottom:0}
+.diag{background:#0a0a12;color:#a8d8b0;padding:.65rem .75rem;border-radius:8px;
+font-family:ui-monospace,monospace;font-size:.7rem;line-height:1.5;min-height:32px;max-height:150px;
+overflow-y:auto;margin-bottom:.6rem;white-space:pre-wrap;word-break:break-word;border:1px solid transparent}
+.diag.ok{color:#10b981;border-color:#1e3a2f;background:#0c1a15}
+.diag.er{color:#ff8a8a;border-color:#3a1e1e;background:#1a0c0c}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:.3rem;margin-bottom:.8rem;
+background:#fff;border-radius:12px;padding:.3rem;border:1px solid #e5e5e5}
+.tab{padding:.6rem;border-radius:8px;text-align:center;cursor:pointer;font-weight:600;
+color:#777;font-size:.7rem}
+.tab.active{background:#1a1a1a;color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.scene{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:1rem;margin-bottom:.7rem}
+.sc-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
+.sc-num{background:#7c3aed;color:#fff;width:26px;height:26px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.sc-title{font-size:.82rem;font-weight:600;flex:1}
+.sc-status{font-size:.65rem;padding:.2rem .5rem;border-radius:10px;background:#f5f5f5;color:#777;
+text-transform:uppercase;font-weight:600}
+.sc-status.done{background:#e3f5e9;color:#2d8a4e}
+.sc-status.processing{background:#fff5e3;color:#d4a017}
+.sc-status.failed{background:#fce3e3;color:#c0392b}
+.sc-rm{width:26px;height:26px;border-radius:50%;border:1px solid #e5e5e5;background:#fff;
+cursor:pointer;color:#c0392b;font-size:.85rem;padding:0;display:flex;align-items:center;
+justify-content:center;flex-shrink:0;margin:0;width:26px}
+.fld{margin-bottom:.5rem}
+.fld label{display:block;font-size:.65rem;color:#777;margin-bottom:.25rem;text-transform:uppercase;font-weight:600}
+.fld textarea{font-size:.82rem;min-height:55px}
+.file-zone{position:relative;border:2px dashed #e5e5e5;border-radius:8px;padding:.9rem;
+text-align:center;cursor:pointer;margin-bottom:.5rem;display:block}
+.file-zone input{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;margin:0}
+.file-zone img{width:100%;max-height:130px;object-fit:contain;border-radius:6px;display:block}
+.file-zone .up-t{font-size:.75rem;font-weight:600}
+.f-rm{padding:.3rem .6rem;border:1px solid #e5e5e5;background:#fff;border-radius:6px;font-size:.65rem;
+color:#c0392b;cursor:pointer;margin-top:.3rem;width:auto;display:inline-block}
+.sc-vid{margin-top:.5rem;border-radius:8px;overflow:hidden;background:#000}
+.sc-vid video{width:100%;display:block}
+.timer{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:.9rem;margin-bottom:.8rem;display:none}
+.timer.visible{display:block}
+.tv{font-size:2rem;font-weight:700;text-align:center;font-family:ui-monospace,monospace;
+margin-bottom:.2rem;color:#7c3aed}
+.tl{font-size:.68rem;color:#777;text-align:center;text-transform:uppercase;margin-bottom:.5rem}
+.pb{width:100%;height:6px;background:#f5f5f5;border-radius:3px;overflow:hidden;margin-top:.6rem}
+.pb-f{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);width:0%;transition:width .3s}
+.empty{text-align:center;padding:1.5rem;color:#999;font-size:.8rem;border:1px dashed #e5e5e5;border-radius:8px}
+.toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-100px);background:#1a1a1a;
+color:#fff;padding:.7rem 1.2rem;border-radius:8px;font-size:.8rem;z-index:1000;opacity:0;
+transition:all .3s;max-width:90vw;text-align:center;pointer-events:none}
+.toast.visible{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.success{background:#2d8a4e}
+.toast.error{background:#c0392b}
+.drop{display:block;border:2px dashed #e5e5e5;background:#fafafa;padding:20px;text-align:center;
+border-radius:10px;cursor:pointer;margin:8px 0}
+.drop b{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.drop small{color:#8b94a7;font-size:12px}
+.thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.tw{position:relative;width:96px;height:96px;border:1px solid #e5e5e5;border-radius:8px;
+overflow:hidden;background:#000}
+.tw img{width:100%;height:100%;object-fit:cover;display:block}
+.tw button{position:absolute;top:3px;right:3px;padding:1px 7px;font-size:11px;background:#ef4444;
+border-color:#ef4444;color:#fff;border-radius:6px;width:auto;margin:0}
+.iout{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:12px}
+.iw{background:#fafafa;border:1px solid #e5e5e5;border-radius:10px;overflow:hidden}
+.iw img{width:100%;display:block;background:#000}
+.iw .row{display:flex;gap:6px;padding:8px;margin:0}
+.iw .row button{flex:1;padding:6px 10px;font-size:12px;width:auto;margin:0}
+.gc{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.gc button{width:auto;padding:8px 14px;font-size:12px;margin:0;flex:none;background:#fff;
+color:#1a1a1a;border:1px solid #e5e5e5}
+.gc button.sel{background:#7c3aed;border-color:#7c3aed;color:#fff}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #a78bfa;border-top-color:transparent;
+border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;display:none;
+align-items:center;justify-content:center;padding:20px}
+#lightbox.on{display:flex}
+#lightbox img{max-width:100%;max-height:90vh;border-radius:8px}
+#lightbox button{position:absolute;top:16px;right:16px;width:auto;padding:8px 14px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.g-item{background:#fafafa;border:1px solid #e5e5e5;border-radius:10px;overflow:hidden}
+.g-item video{width:100%;display:block;background:#000;aspect-ratio:16/9;object-fit:cover}
+.g-cap{padding:.6rem .8rem;font-size:.72rem;color:#777;display:flex;justify-content:space-between;
+align-items:center;gap:.5rem}
+.g-cap a{color:#7c3aed;text-decoration:none;font-weight:600}
+@media(max-width:520px){body{padding:.75rem;font-size:14px}h1{font-size:1.15rem}
+.tabs{grid-template-columns:repeat(2,1fr)}.tab{font-size:.68rem;padding:.55rem .3rem}
+.tv{font-size:1.6rem}.iout,.gallery{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<h1>Studio Créatif</h1>
+<p class="sub">Génération · Templates pro · Images</p>
+
+<div class="box ok">
+  <label class="lbl">Clé API Agnès</label>
+  <input type="password" id="apiKeyInput" placeholder="sk-...">
+  <div class="row">
+    <button id="saveKeyBtn">Enregistrer la clé</button>
+    <button id="testKeyBtn" class="purple">Tester la clé</button>
+  </div>
+  <div class="diag" id="apiDiag">Initialisation…</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="p1">📖 Histoire</div>
+  <div class="tab" data-tab="p2">🎨 Images</div>
+  <div class="tab" data-tab="p3">🎯 Templates</div>
+  <div class="tab" data-tab="p4">🎬 Vidéos</div>
+</div>
+
+<div class="panel active" id="p1">
+  <div class="box">
+    <label class="lbl">Titre de l'histoire</label>
+    <input type="text" id="storyTitle" placeholder="Ex: Course poursuite à Paris">
+  </div>
+  <div class="row">
+    <div class="box">
+      <label class="lbl">Durée par vidéo</label>
+      <select id="storyDuration">
+        <option value="4">4 secondes</option>
+        <option value="6" selected>6 secondes</option>
+        <option value="8">8 secondes</option>
+        <option value="10">10 secondes</option>
+        <option value="12">12 secondes</option>
+      </select>
+    </div>
+    <div class="box">
+      <label class="lbl">Style visuel</label>
+      <select id="globalStyle">
+        <option value="realistic" selected>📸 Réaliste pro</option>
+        <option value="ghibli">🌿 Studio Ghibli</option>
+        <option value="anime">🗾 Anime japonaise</option>
+        <option value="pixar">✨ Pixar 3D</option>
+        <option value="disney">🏰 Disney 2D</option>
+        <option value="cartoon">🎨 Cartoon 2D</option>
+        <option value="netflix">🎬
